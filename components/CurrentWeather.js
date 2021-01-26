@@ -1,23 +1,30 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, Text, View, Image } from 'react-native'
 
 export default function CurrentWeather({data}) {
-    const currentData = data.map(forecast => {
-        return <Text key={forecast.id} style={styles.forecast}>
-        {forecast.main.temp_max} {forecast.main.temp_min} 
-        {forecast.weather[0].descrition} {forecast.weather[0].icon} 
-        </Text>
-        })
+    console.log(data.weather[0].icon)
+    const [currentDate, setCurrenDate] = useState();
+    // console.log(current)
+    // const currentData = current.map(forecast => {
+    //     return <Text key={forecast.id} style={styles.forecast}>
+    //     {forecast.main.temp_max} {forecast.main.temp_min} 
+    //     {forecast.weather[0].descrition} {forecast.weather[0].icon} 
+    //     </Text>
+    //     })
     return (
         <>
             <View style={styles.header}>
-                {currentData}
+                {/* {currentData} */}
                 <View style={styles.current}>
-                    <Text style={styles.title}>Sun Jan 13 2019</Text>
-                    <Text style={styles.title}>19°</Text>
-                    <Text style={styles.title}>12°</Text>
+                    <Text style={styles.title}>{new Date(data.dt_txt).toLocaleString("fr-FR", {weekday:"long",year: 'numeric', month: 'long', day: 'numeric'})}</Text>
+                    <Text style={styles.title}>{data.main.temp_max.toFixed(1)}°C</Text>
+                    <Text style={styles.title}>{data.main.temp_min.toFixed(1)}°C</Text>
                 </View>
                 <View style={styles.icones}>
+                <Image
+                    style={styles.tinyLogo}
+                    source={require(`https://www.openweathermap.org/img/w/04d.png`)}
+                />
                     <Text style={styles.title}>Nuage</Text>
                     <Text style={styles.title}>Cloud</Text>
                 </View>
