@@ -1,40 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { 
-  StyleSheet, 
   SafeAreaView,
-  FlatList
+  StyleSheet, 
 } from 'react-native';
-import { v4 as uuidv4 } from 'uuid';
-import CurrentWeather from './components/CurrentWeather';
-import ForecastWeather from './components/ForecastWeather';
 import axios from 'axios';
 import AppLoading from 'expo-app-loading';
+import CurrentWeather from './components/CurrentWeather';
+import ForecastWeather from './components/ForecastWeather';
 
 export default function App() {
-
   useEffect(() => {
-    axios.get('https://api.openweathermap.org/data/2.5/forecast?q=lens&cnt=16&lang=fr&units=metric&appid=ef6e6acf960b100b476d9774b9ac20a3')
+    axios.get('http://api.openweathermap.org/data/2.5/onecall?lat=50.633333&lon=3.066667&lang=fr&exclude=minutely,hourly,alerts&units=metric&appid=ef6e6acf960b100b476d9774b9ac20a3')
     .then(res =>{
-      setData(res.data.list);
+      setData(res.data);
     })
   }, [])
 
   const [data, setData] = useState([]);
 
-  if(data[0] == null) {
+  if(data.daily == null) {
     return(<AppLoading/>) 
   }
   else 
   {
     return (
       <SafeAreaView style={styles.container}>
-        <CurrentWeather data={data[0]}/>
-        <FlatList
-          data={data}
-          keyExtractor={item => uuidv4().toString()}
-          renderItem={({item}) => <ForecastWeather item={item} />}
-          />
+        <CurrentWeather data={data.daily[0]}/>
+        <ForecastWeather data={data.daily}/>
         <StatusBar style="auto" />
       </SafeAreaView>
     )

@@ -2,9 +2,11 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
 
-export default function ForecastWeather({item}) {
-    return (
-        <ScrollView style={styles.listContainer}>  
+export default function ForecastWeather({data}) {
+  return (
+    <ScrollView  style={styles.listContainer}>  
+      {data.slice(1,7).map(item => {
+        return (
           <View key={uuidv4()} style={styles.forecast}>
             <Image
               style={styles.weatherLogo}
@@ -12,47 +14,54 @@ export default function ForecastWeather({item}) {
               uri: `https://www.openweathermap.org/img/w/${item.weather[0].icon}.png`,
               }}
             />
-            <View style={styles.weatherInfos}>
-              <Text style={{flex:1}}>{new Date(item.dt_txt).toLocaleString("fr-FR", {weekday:"long",year: 'numeric', month: 'long', day: 'numeric'})}</Text>
-              <Text  style={{flex:1}}>{item.weather[0].description}</Text>
+            <View style={styles.weatherInfosContainer}>
+              <Text style={styles.weatherInfosContent}>{new Date(item.dt * 1000).toLocaleString("fr-FR", {weekday:"long", month: 'long', day: 'numeric'})}</Text>
+              <Text  style={{flex:1, textTransform: 'capitalize'}}>{item.weather[0].description}</Text>
             </View>
             <View style={styles.weatherTemp}>
               <Text style={{fontSize: 20}}>
-                {item.main.temp_max.toFixed(1)}°C
+                {item.temp.max.toFixed(1)}°C
               </Text>
               <Text>
-                {item.main.temp_min.toFixed(1)}°C
+                {item.temp.min.toFixed(1)}°C
               </Text>  
             </View>    
           </View> 
-        </ScrollView>
-    )
+        )
+      })}
+    </ScrollView>
+  )
 }
 
 const styles = StyleSheet.create({
+  forecast: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingTop: 40,
+    paddingBottom: 40,
+    alignItems: 'center',
+    borderBottomWidth: 2,
+    borderBottomColor: 'rgba(128, 128, 128, 0.5)',
+},
   listContainer: {
     flex:1,
     width: '100%',
   },
-  forecast: {
-      height:100,
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      alignItems: 'center',
-      borderBottomWidth: 2,
-      borderBottomColor: 'grey'
+  weatherInfosContainer: {
+    flex:3, 
+    marginLeft: 20,
+    flexDirection:'column',
+  },
+  weatherInfosContent: {
+    flex:1, 
+    fontSize: 20
   },
   weatherLogo: {
     width: 60,
     height: 60,
-    marginLeft: 20
-  },
-  weatherInfos: {
-    flex:3, 
-    flexDirection:'column', 
-    justifyContent:'center', 
-    textAlign: 'center' 
+    padding: 10,
+    marginLeft: 10
   },
   weatherTemp: {
     flex: 1, 
